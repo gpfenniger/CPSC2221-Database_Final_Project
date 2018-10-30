@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn add express
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:~/.scripts:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin
+
+Yarn version: 
+  1.10.1
+
+Node version: 
+  11.0.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: read ECONNRESET
+      at TLSWrap.onStreamRead (internal/stream_base_commons.js:111:27)
+
+npm manifest: 
+  {
+    "name": "database-website",
+    "version": "1.0.0",
+    "description": "a webpage for displaying and managing a test restaurant database",
+    "main": "index.js",
+    "repository": "github.com/gpfenniger/database-website",
+    "author": "Griffin Pfenniger",
+    "license": "MIT",
+    "private": false
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

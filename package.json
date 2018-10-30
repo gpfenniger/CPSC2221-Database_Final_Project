@@ -1,0 +1,20 @@
+{
+  "name": "database-website",
+  "version": "1.0.0",
+  "description": "a webpage for displaying and managing a test restaurant database",
+  "main": "index.js",
+  "repository": "github.com/gpfenniger/database-website",
+  "author": "Griffin Pfenniger",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "better-sqlite3": "^5.0.1",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "jquery": "^3.3.1",
+    "node-gyp": "^3.8.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
