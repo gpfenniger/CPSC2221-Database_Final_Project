@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<% include ../partials/head.ejs %>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<% include ../partials/nav.ejs %>
@@ -12,16 +13,25 @@
 		<div class="wrapper">
 
 			<!-- Main Area -->
-			<div>
+			<div class="flex column spacing">
 
 				<!-- Left Panel -->
-				<div>
-					<% $.get('/test') %>
+				<div class="bg-blue border" style="flex: 1; text-align: center;">
+					<h2 class="fg-white center" style="margin-top: 5%; margin-bottom: 5%;">Table View</h2>
+
+					<form>
+						<select>
+							<option>Customers</option>
+							<option>Menu</option>
+						</select>
+					</form>
+
+					<br>
 				</div>
 
 				<!-- Right Panel -->
-				<div>
-
+				<div class="border" style="flex: 3">
+					<div id="query-results"></div>
 				</div>
 
 			</div>
@@ -31,4 +41,31 @@
 		</div>
 
 	</body>
+	<script>
+		document.getElementById("home").classList.add("active");
+
+		$.getJSON('/test', (data) => {
+				document.getElementById("query-results").innerHTML = buildTable(data);
+		});
+
+		function buildTable(data) {
+			var table = `
+				<table>
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+					</tr>	
+				`
+				data.forEach((row) => {
+					table += `
+						<tr>
+							<td>` + row.first_name + `</td>
+							<td>` + row.last_name + `</td>
+						</tr>`
+				});
+				table += `</table>`;
+				return table;
+		}
+		
+	</script>
 </html>
