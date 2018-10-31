@@ -1,0 +1,88 @@
+<!--
+    This page should have a form on the left for searching 
+    should have a title that says 'searching'                   +       
+    should have a drop down for field selection
+    should have a drop down for table
+    should have a list and be able to select fields to display
+    should have an area for generating conditions
+        should be able to select field to put condition on
+        should be able to change between = < >
+        should be able to apply aggregate
+        should be able to select comparator
+    should display the SQL generated
+    
+    This page should display selected columns on the right
+    should have scrollable table
+    should display correct number of columns
+    + marks as done
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head.ejs %>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<% include ../partials/nav.ejs %>
+
+		<!-- Image -->
+		<img src="/nature.jpg" alt="nature" style="width:100%;min-height:350px;max-height:500px;">
+		
+		<div class="wrapper">
+
+			<!-- Main Area -->
+			<div class="flex column spacing">
+
+				<!-- Left Panel -->
+				<div class="bg-blue fg-white border" style="flex: 1; text-align: center;">
+					<h2 class="fg-white center" style="margin-top: 5%; margin-bottom: 5%;">Searching Options</h2>
+					<form>
+                        <!--Keyword : <input type="text">-->
+
+                        <!-- Columns to take -->
+                        Columns : <select>
+                            <option>First Name</option>
+                            <option>Last Name</option>
+                        </select>
+
+                        <!-- from table -->
+                        <br><br>
+                        From : <select>
+                            <option>Customers</option>
+                            <option>Menu</option>
+                        </select>
+                        
+                        <!-- Where conditions -->
+
+                        <!-- Submit Button -->
+                        <br><br>
+                        <button>Search</button>
+                    </form>
+
+                    <br>
+                    <p><b><u>Columns</u></b></p>
+                    <ul id="attributes"></ul>
+                    
+                    <br>
+                    <p><b><u>SQL Generated</u></b></p>
+
+                    <br>
+				</div>
+
+				<!-- Right Panel -->
+				<div class="border" style="flex: 3">
+					<div id="query-results"></div>
+				</div>
+
+			</div>
+
+			<% include ../partials/footer.ejs %>
+
+		</div>
+
+    </body>
+    <script>
+            document.getElementById("search").classList.add("active");
+    </script>
+</html>

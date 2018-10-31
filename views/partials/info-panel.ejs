@@ -1,0 +1,42 @@
+<% include ../partials/stylesheets/info-panel.ejs %>
+<% include ../partials/stylesheets/panel.ejs %>
+<div class="info-panel">
+    <ul>
+        <li><a onclick="loadPanel('theme')">Database Theme</a></li>
+        <li><a onclick="loadPanel('schema')">Schema</a></li>
+        <li><a onclick="loadPanel('func')">Functional Dependency</a></li>
+        <li><a onclick="loadPanel('query')">Queries, Relational Algebra and Datalog</a></li>
+        <li><a onclick="loadPanel('tech')">Tech Stack</a></li>
+        <li><a onclick="loadPanel('who')">Who We Are</a></li>
+        <li><a onclick="loadPanel('contact')">Contact Us</a></li>
+    </ul>
+</div>
+<script>
+    function loadPanel(panel) {
+        var page= `<div></div>`;
+        switch (panel) {
+            case 'theme':
+                page = `<% include ./info-blocks/theme.ejs %>`;
+                break;
+            case 'schema':
+                page = `<% include ./info-blocks/schema.ejs %>`;
+                break;
+            case 'func': 
+                page = `<% include ./info-blocks/func.ejs %>`;
+                break;
+            case 'query':
+                page = `<% include ./info-blocks/query.ejs %>`;
+                break;
+            case 'who':
+                page = `<% include ./info-blocks/who.ejs %>`;
+                break;
+            case 'contact':
+                page = `<% include ./info-blocks/contact.ejs %>`;
+                break;
+            case 'tech': 
+                page = `<% include ./info-blocks/tech-stack.ejs %>`;
+                break;
+        }
+        document.getElementById('panel').innerHTML = page;
+    }
+</script>

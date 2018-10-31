@@ -1,0 +1,49 @@
+<!--
+    Should ask user to login before being able to edit database
+    should have a bar for entering SQL
+    should tell user if sql failed and why
+    should tell user if sql succeeds
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<% include ../partials/head.ejs %>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<% include ../partials/nav.ejs %>
+
+		<!-- Image -->
+		<img src="/nature.jpg" alt="nature" style="width:100%;min-height:350px;max-height:500px;">
+		
+		<div class="wrapper">
+
+			<!-- Main Area -->
+			<div class="flex column spacing">
+
+				<!-- Left Panel -->
+				<div class="bg-blue border" style="flex: 1">
+					<h2 class="fg-white center" style="margin-top: 1%;">Options</h2>
+					<form>
+						<input type="text" id="search-bar">
+						<input type="submit" value="Search">
+					</form>
+				</div>
+
+				<!-- Right Panel -->
+				<div class="border" style="flex: 3">
+					<div id="query-results"></div>
+				</div>
+
+			</div>
+
+			<% include ../partials/footer.ejs %>
+
+		</div>
+
+    </body>
+    <script>
+            document.getElementById("insert").classList.add("active");
+    </script>
+</html>

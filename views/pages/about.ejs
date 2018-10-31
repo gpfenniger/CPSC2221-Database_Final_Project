@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <% include ../partials/head.ejs %>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<% include ../partials/nav.ejs %>
+
+		<!-- Image -->
+		<img src="/nature.jpg" alt="nature" style="width:100%;min-height:350px;max-height:500px;">
+		
+		<div class="wrapper">
+
+                <!-- Main Area -->
+                <div class="flex column spacing">
+    
+                    <!-- Left Panel -->
+                    <div class="bg-blue border" style="flex: 1">
+                        <h2 class="fg-white center" style="margin-top: 1%;">About Our Project</h2>
+
+                        <% include ../partials/info-panel.ejs %>
+
+                    </div>
+    
+                    <!-- Right Panel -->
+                    <div class="border" style="flex: 3">
+                        <div id="panel">
+                            <% include ../partials/info-blocks/theme.ejs %>
+                        </div>
+                    </div>
+    
+                </div>
+    
+                <% include ../partials/footer.ejs %>
+    
+            </div>
+
+    </body>
+    <script>
+        document.getElementById("about").classList.add("active");
+    </script>
+</html>

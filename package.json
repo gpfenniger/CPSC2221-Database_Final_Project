@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "a webpage for displaying and managing a test restaurant database",
   "main": "index.js",
-  "repository": "github.com/gpfenniger/database-website",
+  "repository": "github.com/gpfenniger/CPSC2221-Database_Final_Project",
   "author": "Griffin Pfenniger",
   "license": "MIT",
   "private": false,
