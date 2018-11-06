@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<% include ../partials/head.ejs %>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<% include ../partials/nav.ejs %>
@@ -59,8 +58,8 @@
 				data.forEach((row) => {
 					table += `
 						<tr>
-							<td>` + row.first_name + `</td>
-							<td>` + row.last_name + `</td>
+							<td>` + row.firstName + `</td>
+							<td>` + row.lastName + `</td>
 						</tr>`
 				});
 				table += `</table>`;
