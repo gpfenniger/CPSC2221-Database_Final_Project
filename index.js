@@ -12,19 +12,23 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const row = db.prepare('SELECT * FROM Userlist').all();
-
 app.get('/', (req, res) => res.render("pages/index"));
 app.get('/login', (req, res) => res.render("pages/login"));
 app.get('/about', (req, res) => res.render("pages/about"));
 app.get('/search', (req, res) => res.render("pages/search"));
 app.get('/insert', (req, res) => res.render("pages/insert"));
+app.get('/pos', (req, res) => res.render("pages/pos"));
 
-app.get('/test', (req, res) => res.send(row));
+app.post('/test', (req, res) => {
+    const tableQuery = db
+        .prepare("SELECT * FROM " + req.body.table)
+        .all();
+    res.send(tableQuery);
+});
 
-app.post('/login/submit',function(req,res){
+app.post('/login/submit', (req,res) => {
     const loginQuery = db
-        .prepare('SELECT * FROM Userlist WHERE id = ' + req.body.password)
+        .prepare('SELECT * FROM employee WHERE employeeid = ' + req.body.password)
         .all();
     res.send(loginQuery);
   });

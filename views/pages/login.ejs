@@ -44,7 +44,10 @@
         $("#submit").click(function(){
             pass=$("#password").val();
             $.post("http://localhost:3000/login/submit",{password: pass}, function(data){
-                console.log(data)
+                if (data.length == 0)
+                    console.log("Login Failed");
+                else
+                    console.log("Welcome " + data[0].name + "!");
             });
         });
     });
@@ -53,8 +56,11 @@
         $(document).ready(function(){
         var pass;
             pass=$("#password").val();
-            $.post("http://localhost:3000/login/submit",{password: pass}, function(data){
-                console.log(data)
+            $.post("http://localhost:3000/login/submit",{password: pass}, function(data) {
+                if (data.length == 0)
+                    console.log("Login Failed");
+                else
+                    console.log("Welcome " + data.name + "!");
             });
         });
     }
