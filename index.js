@@ -19,6 +19,13 @@ app.get('/search', (req, res) => res.render("pages/search"));
 app.get('/insert', (req, res) => res.render("pages/insert"));
 app.get('/pos', (req, res) => res.render("pages/pos"));
 
+app.post('/search/query', (req, res) => {
+    const query = db
+        .prepare(req.body.sql)
+        .all()
+    res.send(query);
+});
+
 app.post('/test', (req, res) => {
     const tableQuery = db
         .prepare("SELECT * FROM " + req.body.table)
@@ -31,6 +38,6 @@ app.post('/login/submit', (req,res) => {
         .prepare('SELECT * FROM employee WHERE employeeid = ' + req.body.password)
         .all();
     res.send(loginQuery);
-  });
+});
 
 app.listen(port, () => console.log('CPSC 2221 - Database Final Project'));
