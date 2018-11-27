@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<% include ../partials/head.ejs %>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<% include ../partials/nav.ejs %>
@@ -20,9 +19,17 @@
 					<h2 class="fg-white center" style="margin-top: 5%; margin-bottom: 5%;">Table View</h2>
 
 					<form>
-						<select>
-							<option>Customers</option>
-							<option>Menu</option>
+						<select id="table_changer">
+							<option>customer</option>
+							<option>menu</option>
+							<option>employee</option>
+							<option>stock</option>
+							<option>serve</option>
+							<option>transaction_record</option>
+							<option>takes_from</option>
+							<option>may_contain</option>
+							<option>reads_from</option>
+							<option>cook_from</option>
 						</select>
 					</form>
 
@@ -44,27 +51,47 @@
 	<script>
 		document.getElementById("home").classList.add("active");
 
-		$.getJSON('/test', (data) => {
-				document.getElementById("query-results").innerHTML = buildTable(data);
+		getTable();
+
+		 $(document).ready(function(){
+			$("#table_changer").on("change", () => {
+				var table_name=document.getElementById("table_changer").value;
+				$.post("http://localhost:3000/test", {table: table_name}, (data) => {
+					document.getElementById("query-results").innerHTML = buildTable(data);
+					console.log(data)
+				});
+			});
 		});
 
+		function getTable() {
+			var table_name=document.getElementById("table_changer").value;
+			$.post("http://localhost:3000/test", {table: table_name}, (data) => {
+				document.getElementById("query-results").innerHTML = buildTable(data);
+				console.log(data)
+			});
+		}
+
+
 		function buildTable(data) {
-			var table = `
-				<table>
-					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-					</tr>	
-				`
-				data.forEach((row) => {
-					table += `
-						<tr>
-							<td>` + row.first_name + `</td>
-							<td>` + row.last_name + `</td>
-						</tr>`
-				});
-				table += `</table>`;
-				return table;
+			var table = `<table><tr>`
+			for (var property in data[0]) {
+				if (data[0].hasOwnProperty(property)) {
+					table += `<th>` + property.toUpperCase() + `</th>`;
+				}
+			}
+			table += `</tr>`;	
+				
+			data.forEach((row) => {
+				table += `<tr>`;
+					for (var property in row) {
+						if (row.hasOwnProperty(property)) {
+							table += `<td>` + row[property] + `</td>`;
+						}
+					}
+				table += `</tr>`;
+			});
+			table += `</table>`;
+			return table;
 		}
 		
 	</script>

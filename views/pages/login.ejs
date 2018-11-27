@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head.ejs %>
+  </head>
+
+  <body>
+
+    <div class="login-box" style="text-align: center;padding: 5px;width:20%;margin-left:30%;margin-top: 10%;">
+        <h2>Employee ID</h2>
+        <div class="container flex row">
+            <input type="password" id="password" size="40"  readonly><br>
+            <div class="flex column">
+                    <input class="btn" type="button" id="one" value="1" onclick="addValue(1)">
+                    <input class="btn" type="button" id="two" value="2" onclick="addValue(2)">
+                    <input class="btn" type="button" id="three" value="3" onclick="addValue(3)">
+            </div>
+            <div class="flex column">
+                    <input class="btn" type="button" id="one" value="4" onclick="addValue(4)">
+                    <input class="btn" type="button" id="two" value="5" onclick="addValue(5)">
+                    <input class="btn" type="button" id="three" value="6" onclick="addValue(6)">
+            </div>
+            <div class="flex column">
+                    <input class="btn" type="button" id="one" value="7" onclick="addValue(7)">
+                    <input class="btn" type="button" id="two" value="8" onclick="addValue(8)">
+                    <input class="btn" type="button" id="three" value="9" onclick="addValue(9)">
+            </div>
+            <div class="flex column">
+                <input class="btn" type="button" id="zero" value="0" onclick="addValue(0)">
+                <input class="btn" type="button" id="clear" value="Clear" onclick="resetPass()">
+                <input class="btn" type="button" id="submit" value="Login">
+            </div>
+            <a href="/">Login as Guest</a>
+        </div>
+    </div>
+
+  </body>
+</html>
+
+<script>
+    // Split up so enter key can trigger login
+    $(document).ready(function(){
+        var pass;
+        $("#submit").click(function(){
+            pass=$("#password").val();
+            $.post("http://localhost:3000/login/submit",{password: pass}, function(data){
+                if (data.length == 0)
+                    console.log("Login Failed");
+                else
+                    console.log("Welcome " + data[0].name + "!");
+            });
+        });
+    });
+
+    function login() {
+        $(document).ready(function(){
+        var pass;
+            pass=$("#password").val();
+            $.post("http://localhost:3000/login/submit",{password: pass}, function(data) {
+                if (data.length == 0)
+                    console.log("Login Failed");
+                else
+                    console.log("Welcome " + data.name + "!");
+            });
+        });
+    }
+
+    function addValue(value) {
+        document.getElementById("password").value += value;
+    }
+
+    function resetPass() { document.getElementById("password").value = '' }
+
+    document.addEventListener('keypress', (key) => {
+        if (key.key >= '0' && key.key <= '9')
+            document.getElementById("password").value += key.key;
+        else if (key.charCode == 0)
+            login()
+    })
+</script>
+
+<style>
+    body {
+        background-color: lightblue;
+    }
+
+    .login-box {
+        width: 20%;
+        border: solid 1px black;
+        box-shadow: 10px 10px 8px #aaaaaa;
+        background-color: white;
+    }
+    .btn {
+        margin: 5px;
+        padding: 5px;
+        flex: 1;
+    }
+</style>

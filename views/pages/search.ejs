@@ -41,16 +41,15 @@
                         <!--Keyword : <input type="text">-->
 
                         <!-- Columns to take -->
-                        Columns : <select>
-                            <option>First Name</option>
-                            <option>Last Name</option>
-                        </select>
+                        Columns : 
+                        <div id="column-selection"></div>
 
                         <!-- from table -->
                         <br><br>
                         From : <select>
-                            <option>Customers</option>
-                            <option>Menu</option>
+                            <option>customer</option>
+                            <option>menu</option>
+                            <option>employee</option>
                         </select>
                         
                         <!-- Where conditions -->
@@ -60,14 +59,14 @@
                         <button>Search</button>
                     </form>
 
-                    <br>
-                    <p><b><u>Columns</u></b></p>
-                    <ul id="attributes"></ul>
-                    
-                    <br>
-                    <p><b><u>SQL Generated</u></b></p>
+                    <br><br>
 
-                    <br>
+                    <form>
+                        <h3>SQL Search</h3><br>
+                        <input type='text' id="sql-search"><br><br>
+                        <input type='button' id='sqlSubmit' value='Use SQL'>
+                    </form>
+
 				</div>
 
 				<!-- Right Panel -->
@@ -84,5 +83,39 @@
     </body>
     <script>
             document.getElementById("search").classList.add("active");
+
+            $(document).ready(() => {
+                var sql;
+                $("#sqlSubmit").click(() => {
+                    sql = $("#sql-search").val();
+                    $.post("http://localhost:3000/search/query", {sql: sql}, (data) => {
+                        if (data.length == 0) 
+                            document.getElementById('query-results').innerHTML = "Query Failed";
+                        else document.getElementById('query-results').innerHTML = buildTable(data); 
+                    });
+                });
+            });
+
+            function buildTable(data) {
+                var table = `<table><tr>`
+                for (var property in data[0]) {
+                    if (data[0].hasOwnProperty(property)) {
+                        table += `<th>` + property.toUpperCase() + `</th>`;
+                    }
+                }
+                table += `</tr>`;	
+                    
+                data.forEach((row) => {
+                    table += `<tr>`;
+                        for (var property in row) {
+                            if (row.hasOwnProperty(property)) {
+                                table += `<td>` + row[property] + `</td>`;
+                            }
+                        }
+                    table += `</tr>`;
+                });
+                table += `</table>`;
+                return table;
+            }
     </script>
 </html>
