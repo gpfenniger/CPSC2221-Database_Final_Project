@@ -26,6 +26,10 @@ app.post('/search/query', (req, res) => {
     res.send(query);
 });
 
+app.post('/insert/query', (req, res) => {
+    db.exec(req.body.sql);
+});
+
 app.post('/test', (req, res) => {
     const tableQuery = db
         .prepare("SELECT * FROM " + req.body.table)

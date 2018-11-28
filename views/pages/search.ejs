@@ -39,31 +39,37 @@
 					<h2 class="fg-white center" style="margin-top: 5%; margin-bottom: 5%;">Searching Options</h2>
 					<form>
                         <!--Keyword : <input type="text">-->
-
-                        <!-- Columns to take -->
-                        Columns : 
-                        <div id="column-selection"></div>
-
-                        <!-- from table -->
+                        <select id="operation-changer">
+                            <option>Selection</option>
+                            <option>Join</option>
+                            <option>Divison</option>
+                            <option>Aggregation</option>
+                            <option>Nested Aggregation</option>
+                        </select>
                         <br><br>
-                        From : <select>
+                        <label>From : </label>
+                        <select id="table_changer">
                             <option>customer</option>
                             <option>menu</option>
                             <option>employee</option>
+                            <option>stock</option>
+                            <option>serve</option>
+                            <option>transaction_record</option>
+                            <option>takes_from</option>
+                            <option>may_contain</option>
+                            <option>reads_from</option>
+                            <option>cook_from</option>
                         </select>
-                        
-                        <!-- Where conditions -->
-
-                        <!-- Submit Button -->
-                        <br><br>
-                        <button>Search</button>
                     </form>
+
+                    <div id="option-area"></div>
+
 
                     <br><br>
 
                     <form>
                         <h3>SQL Search</h3><br>
-                        <input type='text' id="sql-search"><br><br>
+                        <textarea id="sql-search"></textarea><br><br>
                         <input type='button' id='sqlSubmit' value='Use SQL'>
                     </form>
 
@@ -82,7 +88,16 @@
 
     </body>
     <script>
+            checkBoxValues = [];
+
             document.getElementById("search").classList.add("active");
+
+            var option = document.getElementById("operation-changer").value;
+                    var table_name = "customer";
+                    $.post("http://localhost:3000/test", {table: table_name}, (data) => {
+                        document.getElementById("option-area").innerHTML = buildOptions(option, data);
+                        console.log(data)
+                    });
 
             $(document).ready(() => {
                 var sql;
@@ -94,9 +109,34 @@
                         else document.getElementById('query-results').innerHTML = buildTable(data); 
                     });
                 });
+                $("#table_changer").on("change", () => {
+                    var table_name=document.getElementById("table_changer").value;
+                    $.post("http://localhost:3000/test", {table: table_name}, (data) => {
+                        document.getElementById("column-selection").innerHTML = buildCheckboxes(data);
+                        console.log(data)
+                    });
+                });
+                $("#operation-changer").on("change", () => {
+                    var option = document.getElementById("operation-changer").value;
+                    var table_name = "customer";
+                    $.post("http://localhost:3000/test", {table: table_name}, (data) => {
+                        document.getElementById("option-area").innerHTML = buildOptions(option, data);
+                        console.log(data)
+                    });
+                });
+                $("#make-query").on('click', () => {
+                    console.log("clicked")
+                    sql = makeQuery();
+                    $.post("http://localhost:3000/search/query", {sql: sql}, (data) => {
+                        if (data.length == 0) 
+                            document.getElementById('query-results').innerHTML = "Query Failed";
+                        else document.getElementById('query-results').innerHTML = buildTable(data); 
+                    });
+                });
             });
 
             function buildTable(data) {
+                console.log(data);
                 var table = `<table><tr>`
                 for (var property in data[0]) {
                     if (data[0].hasOwnProperty(property)) {
@@ -116,6 +156,107 @@
                 });
                 table += `</table>`;
                 return table;
+            }
+
+            function buildCheckboxes(data) {
+                checkBoxValues = [];
+                var checkersBoBeckers = `<table>`;
+                for (var property in data[0]) {
+                    checkersBoBeckers += `<tr><td>` + property + `</td>`;
+                    checkBoxValues.push(property);
+                    checkersBoBeckers += `<td><input id="` + property + `" type="checkbox"><td></tr>`;
+                }
+                checkersBoBeckers += `</table>`;
+                return checkersBoBeckers;
+            }
+
+            function makeQuery() {
+                var table_name=document.getElementById("table_changer").value;
+                var query = "SELECT ";
+                for (var i = 0; i < checkBoxValues.length; i++) {
+                    if (document.getElementById(checkBoxValues[i]).checked)
+                        query += checkBoxValues[i] + ', ';
+                }
+                query = query.substring(0,query.length - 2);
+                query += " FROM " + table_name;
+                alert(query);
+                return query;
+            }
+
+            function buildOptions(zeType, data) {
+                switch (zeType) {
+                    case 'Selection': return buildSelectionOption(data);
+                    case 'Join' :  break;
+                    case 'Divison':  break;
+                    case 'Aggregation':  break;
+                    case 'Nested Aggregation': break;
+                    default: alert("Not Implemented!");
+                }
+            }
+
+            function buildTableSelector() {
+                return `
+                <label>From : </label>
+                <select id="table_changer">
+                    <option>customer</option>
+                    <option>menu</option>
+                    <option>employee</option>
+                    <option>stock</option>
+                    <option>serve</option>
+                    <option>transaction_record</option>
+                    <option>takes_from</option>
+                    <option>may_contain</option>
+                    <option>reads_from</option>
+                    <option>cook_from</option>
+                </select>
+                `;
+            }
+
+            function buildWhereSelector() {
+
+            }
+
+            function buildWhereCondition(data) {
+                var makeCondition = `<div id="where-cond"><form>`;
+
+                // Field Selector
+                makeCondition += `<select>`;
+                console.log(checkBoxValues);
+                for (var property in data[0]) {
+                    makeCondition += `<option>` + property + `</option>`;
+                }
+                makeCondition += '</select>';
+
+                // Comparator Selector
+                makeCondition += `
+                    <select id="comparator">
+                        <option>=</option>
+                        <option>!=</option>
+                        <option>></option>
+                        <option><</option>
+                    </select>
+                `;
+
+                makeCondition += `<input id="value-field" type="text">`;
+
+                makeCondition += `</form></div>`;
+                return makeCondition;
+            }
+
+            function getFields() {
+
+            }
+
+            function buildSearchButton() { return `<input type='button' id='make-query' value='Search'>`; }
+            function buildColumnDiv() { return `<label>Columns: </label><div id="column-selection"></div>`; }
+
+            function buildSelectionOption(data) {
+                var selectOption = ``;
+                selectOption += buildColumnDiv();
+                //selectOption += buildTableSelector();
+                selectOption += buildSearchButton();
+                selectOption += `<% include ../partials/where_clause.ejs %>`
+                return selectOption;
             }
     </script>
 </html>

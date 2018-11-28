@@ -23,11 +23,16 @@
 			<div class="flex column spacing">
 
 				<!-- Left Panel -->
-				<div class="bg-blue border" style="flex: 1">
-					<h2 class="fg-white center" style="margin-top: 1%;">Options</h2>
+				<div class="bg-blue border" style="flex: 1; text-align: center;">
+					<h2 class="fg-white center" style="margin-top: 1%;">Options</h2><br>
 					<form>
-						<input type="text" id="search-bar">
-						<input type="submit" value="Search">
+						
+						<select id="option-menu">
+							<option>Insert</option>
+							<option>Deletion</option>
+							<option>Update</option>
+						</select>
+
 					</form>
 				</div>
 
@@ -44,6 +49,154 @@
 
     </body>
     <script>
-            document.getElementById("insert").classList.add("active");
+			document.getElementById("insert").classList.add("active");
+			var values = [];
+			setup('Insert');
+
+			$(document).ready(() => {
+				$("#table_changer").on("change", () => {
+                    var table_name=document.getElementById("table_changer").value;
+                    $.post("http://localhost:3000/test", {table: table_name}, (data) => {
+                        document.getElementById("cyou").innerHTML = buildTable(data);
+                        console.log(data)
+                    });
+				});
+				$("#option-menu").on('change', () => {
+					setup(document.getElementById("option-menu").value);
+				});
+				$("#insertValuesBtn").on('click', () => {
+					var query = "INSERT INTO ";
+					query += document.getElementById("table_changer").value;
+					query += "("
+					for (var i = 0; i < values.length; i++)
+						query += values[i] + ", "
+					query = query.substring(0, query.length - 2);
+					query += ") "
+					query += " VALUES (";
+					for (var i = 0; i < values.length; i++)
+						query += document.getElementById(values[i] + "-cell").value; + ", "
+					query += ");"
+					alert(query)
+					
+					$.post("http://localhost:3000/insert/query", {sql: query}, (data) => {
+						console.log("hey")
+                        if (data.length == 0) 
+                            document.getElementById('query-results').innerHTML = "Query Failed";
+                        else document.getElementById('query-results').innerHTML += "Added"
+                    });
+				});
+				$("#deleteTupleBtn").on('click', () => {
+					var query = "DELETE FROM ";
+					query += document.getElementById("table_changer").value;
+					query += " WHERE ";
+					query += document.getElementById("fieldToCheck").value;
+					query += document.getElementById("operator").value;
+					query += document.getElementById("valueToCompare").value;
+					alert(query);
+
+					$.post("http://localhost:3000/insert/query", {sql: query}, (data) => {
+						console.log("hey")
+                        if (data.length == 0) 
+                            document.getElementById('query-results').innerHTML = "Query Failed";
+                        else document.getElementById('query-results').innerHTML += "Added"
+                    });
+				});
+				$("#updateTupleBtn").on('click', () => {
+					var query = "UPDATE ";
+					query += document.getElementById("table_changer").value;
+					query += " SET " + document.getElementById("fieldToSet").value;
+					query += "="
+					query += document.getElementById("toSet").value;
+					query += " WHERE " + document.getElementById("fieldToCheck").value;
+					query += document.getElementById("operator").value;
+					query += document.getElementById("valueToCompare").value;
+					alert(query)
+
+					$.post("http://localhost:3000/insert/query", {sql: query}, (data) => {
+						console.log("hey")
+                        if (data.length == 0) 
+                            document.getElementById('query-results').innerHTML = "Query Failed";
+                        else document.getElementById('query-results').innerHTML += "Added"
+                    });
+				});
+			});
+
+			function setup() {
+				var pane = document.getElementById("query-results");
+				switch(document.getElementById("option-menu").value) {
+					case 'Insert':
+						makeInsert(pane);
+						break;
+					case 'Deletion':
+						makeDelete(pane);
+						break;
+					case 'Update':
+						makeUpdate(pane);
+						break;
+				}
+			}
+
+			function makeInsert(pane) {
+				pane.innerHTML = buildTableSelector();
+				var table_name=document.getElementById("table_changer").value;
+				$.post("http://localhost:3000/test", {table: table_name}, (data) => {
+					document.getElementById("cyou").innerHTML = buildTable(data);
+					console.log(data)
+				});
+				pane.innerHTML += `<input id="insertValuesBtn" type="button" value="Insert">`;
+			}
+
+			function makeDelete(pane) {
+				pane.innerHTML = buildTableSelector();
+				pane.innerHTML += `<label>Where Field : </label><input type="text" id="fieldToCheck"><br>`;
+				pane.innerHTML += `<select id="operator"><option>=</option><option>></option><option><</option></select><br>`;
+				pane.innerHTML += `<input type="text" id="valueToCompare"><br>`;
+				pane.innerHTML += `<input type="button" id="deleteTupleBtn" value="Delete">`;
+			}
+
+			function makeUpdate(pane) {
+				pane.innerHTML = buildTableSelector();
+				pane.innerHTML += `<label>Set </label><input type="text" id="fieldToSet"><br>`;
+				pane.innerHTML += `<label>=</label><input type="text" id="toSet"><br>`;
+				pane.innerHTML += `<label>Where Field : </label><input type="text" id="fieldToCheck"><br>`;
+				pane.innerHTML += `<select id="operator"><option>=</option><option>></option><option><</option></select><br>`;
+				pane.innerHTML += `<input type="text" id="valueToCompare"><br>`;
+				pane.innerHTML += `<input type="button" id="updateTupleBtn" value="Update">`;
+			}
+
+			function buildTableSelector() {
+                return `
+                <label>Into : </label>
+                <select id="table_changer">
+                    <option>customer</option>
+                    <option>menu</option>
+                    <option>employee</option>
+                    <option>stock</option>
+                    <option>serve</option>
+                    <option>transaction_record</option>
+                    <option>takes_from</option>
+                    <option>may_contain</option>
+                    <option>reads_from</option>
+                    <option>cook_from</option>
+				</select>
+				<div id="cyou"></div>
+                `;
+			}
+			
+			function buildTable(data) {
+				var table = `<table><tr>`;
+				values = [];
+				for (var property in data[0]) {
+					table += `<th>` + property + `</th>`;
+					values.push(property);
+				}
+				table += `</tr><tr>`;
+				for (var property in data[0]) 
+					table += `<td><input type="text" id="` + property + `-cell"></td>`;
+				table += `</tr>`;
+				table += `</table>`;
+				return table;
+			}
+
     </script>
 </html>
